@@ -63,6 +63,8 @@ const columns = ref<Column[]>([
 		tasks: [],
 	},
 ]);
+
+const alt = useKeyModifier('Alt');
 </script>
 <template>
 	<div>
@@ -82,16 +84,18 @@ const columns = ref<Column[]>([
 					</header>
 					<draggable
 						v-model="column.tasks"
-						group="tasks"
+						:group="{ name: 'tasks', pull: alt ? 'clone' : true }"
 						item-key="id"
 						:animation="150"
 					>
 						<template #item="{ element: task }: { element: Task }">
-							<TrelloBoardTask :task="task" />
+							<div>
+								<TrelloBoardTask :task="task" />
+							</div>
 						</template>
 					</draggable>
 					<footer>
-						<button class="text-gray-500">+ Add a Card</button>
+						<NewTask @add="column.tasks.push($event)" />
 					</footer>
 				</div>
 			</template>
@@ -102,4 +106,28 @@ const columns = ref<Column[]>([
 	</pre
 	> -->
 </template>
-<style scoped></style>
+<style scoped>
+/*.sortable-chosen {
+	background-color: aqua;
+}*/
+
+.sortable-drag .task {
+	transform: rotate(5deg);
+}
+
+.sortable-ghost .task {
+	position: relative;
+}
+
+.sortable-ghost .task::after {
+	content: '';
+	@apply absolute top-0 left-0 w-full h-full bg-slate-300 rounded;
+	/* 
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.2);*/
+}
+</style>
