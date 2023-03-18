@@ -90,7 +90,14 @@ const alt = useKeyModifier('Alt');
 					>
 						<template #item="{ element: task }: { element: Task }">
 							<div>
-								<TrelloBoardTask :task="task" />
+								<TrelloBoardTask
+									:task="task"
+									@delete="
+										column.tasks = column.tasks.filter(
+											(t) => t.id !== $event
+										)
+									"
+								/>
 							</div>
 						</template>
 					</draggable>
@@ -129,5 +136,11 @@ const alt = useKeyModifier('Alt');
 	width: 100%;
 	height: 100%;
 	background-color: rgba(0, 0, 0, 0.2);*/
+}
+
+.task:focus,
+.task:focus-visible {
+	@apply outline-gray-400 !important;
+	outline: gray solid 3px;
 }
 </style>
